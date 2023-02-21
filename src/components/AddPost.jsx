@@ -1,6 +1,16 @@
-export default function AddPost() {
+export default function AddPost({ createPost }) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const post = {
+      titulo: e.target.titulo.value,
+      img: e.target.imagen.value,
+      descripcion: e.target.descripcion.value,
+    };
+    createPost(post);
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="mb-2">
         <label
           htmlFor="titulo"
