@@ -64,7 +64,7 @@ export default function App() {
     <div className="container mt-5">
       <h1 className="text-center">📷 Like Me 📷</h1>
       <main className="row">
-        <section className="col-12 sm-4 mt-5">
+        <section className="col-12 col-md-4 mt-5">
           <div className="card bg-primary text-white">
             <div className="card-body">
               <h2>Add Post</h2>
@@ -72,7 +72,7 @@ export default function App() {
             </div>
           </div>
         </section>
-        <section className="col-12 sm-4 mt-5">
+        <section className="col-12 col-md-4 mt-5">
           {posts.map((post) => {
             return (
               <CardPost
