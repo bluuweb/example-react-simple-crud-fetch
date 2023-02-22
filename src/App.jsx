@@ -1,50 +1,38 @@
+import { successToast, errorToast } from "./utils/toast";
 import { useEffect, useState } from "react";
+
+import {
+  getPosts,
+  addPost,
+  deletePost,
+  likePost,
+} from "./services/postService";
+
 import AddPost from "./components/AddPost";
 import CardPost from "./components/CardPost";
-
-const getPosts = async () => {
-  const response = await fetch("http://localhost:3000/posts");
-  const data = await response.json();
-  return data;
-};
-
-const addPost = async (post) => {
-  const response = await fetch("http://localhost:3000/posts", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(post),
-  });
-  const data = await response.json();
-  return data;
-};
-
-const deletePost = async (id) => {
-  await fetch(`http://localhost:3000/posts/${id}`, {
-    method: "DELETE",
-  });
-};
-
-const likePost = async (id) => {
-  await fetch(`http://localhost:3000/posts/like/${id}`, {
-    method: "PUT",
-  });
-};
 
 export default function App() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    getPosts().then((data) => {
-      setPosts(data);
-    });
+    getPosts()
+      .then((data) => {
+        setPosts(data);
+      })
+      .catch((err) => {
+        errorToast("Error al obtener los posts");
+      });
   }, []);
 
   const createPost = (post) => {
-    addPost(post).then((data) => {
-      setPosts([...posts, data]);
-    });
+    addPost(post)
+      .then((data) => {
+        setPosts([...posts, data]);
+        successToast("Post creado correctamente");
+      })
+      .catch((err) => {
+        errorToast("Error al crear el post");
+      });
   };
 
   const deletePostById = (id) => {
@@ -53,6 +41,7 @@ export default function App() {
         return post.id !== id;
       });
       setPosts(newPosts);
+      successToast("Post eliminado correctamente");
     });
   };
 
@@ -94,6 +83,14 @@ export default function App() {
               />
             );
           })}
+
+          {posts.length === 0 && (
+            <div className="card">
+              <div className="card-body">
+                <h2>No hay posts</h2>
+              </div>
+            </div>
+          )}
         </section>
       </main>
     </div>

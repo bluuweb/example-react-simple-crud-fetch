@@ -1,12 +1,41 @@
+import { errorToast } from "../utils/toast";
+import { useState } from "react";
+
 export default function AddPost({ createPost }) {
+  const [values, setValues] = useState({
+    titulo: "",
+    img: "",
+    descripcion: "",
+  });
+
+  const handleChange = (e) => {
+    setValues({
+      ...values,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const { titulo, img, descripcion } = values;
+
+    if (!titulo.trim() || !img.trim() || !descripcion.trim())
+      return errorToast("Todos los campos son obligatorios");
+
     const post = {
-      titulo: e.target.titulo.value,
-      img: e.target.imagen.value,
-      descripcion: e.target.descripcion.value,
+      titulo: titulo.trim(),
+      img: img.trim(),
+      descripcion: descripcion.trim(),
     };
-    createPost(post);
+
+    createPost({ ...post });
+
+    setValues({
+      titulo: "",
+      img: "",
+      descripcion: "",
+    });
   };
 
   return (
@@ -22,19 +51,25 @@ export default function AddPost({ createPost }) {
           type="text"
           className="form-control"
           id="titulo"
+          name="titulo"
+          onChange={handleChange}
+          value={values.titulo}
         />
       </div>
       <div className="mb-2">
         <label
-          htmlFor="imagen"
+          htmlFor="img"
           className="form-label"
         >
-          Imagen
+          Imagen URL
         </label>
         <input
           type="text"
           className="form-control"
-          id="imagen"
+          id="img"
+          name="img"
+          onChange={handleChange}
+          value={values.img}
         />
       </div>
       <div className="mb-3">
@@ -47,11 +82,19 @@ export default function AddPost({ createPost }) {
         <textarea
           id="descripcion"
           className="form-control"
+          name="descripcion"
+          onChange={handleChange}
+          value={values.descripcion}
         />
       </div>
       <button
         type="submit"
         className="btn btn-light mx-auto d-block"
+        disabled={
+          !values.titulo.trim() ||
+          !values.img.trim() ||
+          !values.descripcion.trim()
+        }
       >
         Agregar
       </button>
